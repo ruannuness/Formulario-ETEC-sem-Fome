@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="style.css">
+
+    <script type="text/javascript" src="js/jquery-3.4.1.js"></script>
+    <script type="text/javascript" src="js/jquery.validate.js"></script>
+    <script type="text/javascript" src="js/jquery.mask.min.js"></script>
+    <script type="text/javascript" src="js/messages_pt_BR.js"></script>
+    <title>Etec sem fome</title>
+
+    <script type="text/javascript">
+        $("#cep").focusout(function(){
+            //Início do Comando AJAX
+            $.ajax({
+                //O campo URL diz o caminho de onde virá os dados
+                //É importante concatenar o valor digitado no CEP
+                url: 'https://viacep.com.br/ws/'+$(this).val()+'/json/unicode/',
+                //Aqui você deve preencher o tipo de dados que será lido,
+                //no caso, estamos lendo JSON.
+                dataType: 'json',
+                //SUCESS é referente a função que será executada caso
+                //ele consiga ler a fonte de dados com sucesso.
+                //O parâmetro dentro da função se refere ao nome da variável
+                //que você vai dar para ler esse objeto.
+                success: function(resposta){
+                    //Agora basta definir os valores que você deseja preencher
+                    //automaticamente nos campos acima.
+                    $("#logradouro").val(resposta.logradouro);
+                    $("#complemento").val(resposta.complemento);
+                    $("#bairro").val(resposta.bairro);
+                    $("#cidade").val(resposta.localidade);
+                    $("#uf").val(resposta.uf);
+                    //Vamos incluir para que o Número seja focado automaticamente
+                    //melhorando a experiência do usuário
+                    $("#numero").focus();
+                }
+            });
+        });
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            $('.celular').mask('(00) 90000-0000')
+        })
+        $(document).ready(function () {
+            $('.cep').mask('00000-000')
+        })
+        $(document).ready(function() {
+            $(' .telefone').mask('(00) 0000-0000')
+        })
+        $(document).ready(function () {
+            $(' .cnpj').mask('00.000.000/0000-00')
+        })
+        $(document).ready(function () {
+            $(' .cpf').mask('000.000.000-0')
+        })
+        $(document).ready(function () {
+            $('.iestadual').mask('000.000.000.000')
+        })
+
+        function onlynumber(evt) {
+            var theEvent = evt || window.event;
+            var key = theEvent.keyCode || theEvent.which;
+            key = String.fromCharCode( key );
+            var regex = /^[0-9.]+$/;
+            if (!regex.test(key) ) {
+                theEvent.returnValue = false;
+            if(theEvent.preventDefault) theEvent.preventDefault();
+            }
+        }
+    </script>
+</head>
+
+<body>
+    <form class="form" id="form" method="POST" action="dados.php">
+        <h1>Página de Cadastro</h1>
+        <div class="formproprietario" id="formproprietario" method="POST">
+
+
+            <h2> Dados do Proprietário</h2>
+            <p>Nome Completo</p>
+            <input type="text" name="name" class="name" placeholder="Digite seu Nome" minlength="5" maxlength="254" required>
+            <p>Email</p>
+            <input type="email" name="email" class="email" id="email" placeholder="Digite seu Email" minlength="5" maxlength="254" required>
+            <p>Telefone Celular</p>
+            <input type="tel" name="celular" class="celular" name="celular" id="celular" placeholder="Digite seu Numero de Celular" minlength="18" maxlength="18" required>
+
+            <h2> Dados da Empresa</h2>
+
+            <p>Razão Social</p>
+            <input type="text" name="social" placeholder="Digite a Razão Social" minlength="2" maxlength="254" required>
+            <p>CNPJ</p>
+            <input type="text" name="cnpj" placeholder="Digite o CNPJ" minlength="18" maxlength="18" class="cnpj" required>
+            <p>Inscrição Estadual</p>
+            <input type="text" name="insestadual" placeholder="Digite a Inscrição Estadual" class="iestadual" minlength="12" maxlength="12" required>
+            <p>Inscrição Municipal</p>
+            <input type="text" name="insmunicipal" minlength="2" required>
+            <p>Alvará Sanitário</p>
+            <input type="text" name="alvasanitario" required>
+            <p>Telefone</p>
+            <input type="text" name="telefoneemp" class="telefone" id="telefone" placeholder="Digite seu numero de Telefone" minlength="14" maxlength="14" required>
+            <p>Telefone Celular</p>
+            <input type="text" name="celularemp" class="celular" id="celular" placeholder="Digite seu numero de celular" minlength="15" maxlength="15" required>
+            <p>E-mail</p>
+            <input type="email" name="emailemp" class="email" placeholder="Digite o Email" minlength="5" maxlength="254" required>
+
+            <h2> Endereço</h2>
+
+            <p>CEP</p>
+            <input type="text" name="cep" class="cep" id="cep" placeholder="Digite o CEP" minlength="9" maxlength="9" required>
+            <p>Logradouro</p>
+            <input type="text" name="logradouro" id="logradouro" class="logradouro" placeholder="Digite o nome da rua" required>
+            <p>Numero</p>
+            <input type="number" name="numero" placeholder="Digite o numero do estabelecimento" maxlength="8" required>
+            <p>Bairro</p>
+            <input type="text" name="bairro" id="bairro" class="bairro" placeholder="Digite o nome de seu bairro" minlength="3" maxlength="64" required>
+            <p>Cidade</p>
+            <input type="text" name="cidade" id="cidade" class="cidade" placeholder="Digite o nome da Cidade" minlength="3" maxlength="64" required>
+            <p>Estado</p>
+            <select id="uf" name="uf" class="uf" name="estados-brasil" required>
+                <option value="AC">Acre</option>
+                <option value="AL">Alagoas</option>
+                <option value="AP">Amapá</option>
+                <option value="AM">Amazonas</option>
+                <option value="BA">Bahia</option>
+                <option value="CE">Ceará</option>
+                <option value="DF">Distrito Federal</option>
+                <option value="ES">Espírito Santo</option>
+                <option value="GO">Goiás</option>
+                <option value="MA">Maranhão</option>
+                <option value="MT">Mato Grosso</option>
+                <option value="MS">Mato Grosso do Sul</option>
+                <option value="MG">Minas Gerais</option>
+                <option value="PA">Pará</option>
+                <option value="PB">Paraíba</option>
+                <option value="PR">Paraná</option>
+                <option value="PE">Pernambuco</option>
+                <option value="PI">Piauí</option>
+                <option value="RJ">Rio de Janeiro</option>
+                <option value="RN">Rio Grande do Norte</option>
+                <option value="RS">Rio Grande do Sul</option>
+                <option value="RO">Rondônia</option>
+                <option value="RR">Roraima</option>
+                <option value="SC">Santa Catarina</option>
+                <option value="SP" selected>São Paulo</option>
+                <option value="SE">Sergipe</option>
+                <option value="TO">Tocantins</option>
+            </select>
+        
+            <h2>Localização Georreferenciada</h2>
+
+            <p>Clique no botão para receber sua localização em Latitude e Longitude:</p>
+            <button onclick="getLocation()">Clique Aqui</button>
+            <p>Latidude</p>
+            <input class="latitude" name="latidude"  id="latiude" type="text" required>
+            <p>Longitude</p>
+            <input class="longitude" name="longitude"  id="longitude" type="text" required>
+        
+
+            <button class="cadastrar">Cadastrar</button>
+            
+       
+    </form>
+
+    <script>
+        $(document).ready(function(){
+            $('.form').validate({
+                rules: {
+                    name: {
+                        required: true,
+                        minlength: 2
+                    },
+                    telefone: {
+                        required: true,
+                        minlength: 13,
+                        maxlength: 14
+                    },
+                    celularemp: {
+                        required: true,
+                        minlength: 14
+                    },
+                    cep: {
+                        required: true,
+                        minlength: 9,
+                        maxlength: 9
+                    },
+                    cnpj: {
+                        required: true,
+                        minlength: 18,
+                        maxlength: 18
+                    },
+                    cpf: {
+                        required: true,
+                        minlength: 11,
+                        maxlength: 11   
+                    },
+                    email: {
+                        required: true,
+                        minlength: 3,
+                    },
+                    insestadual: {
+                        required: true
+                    },
+                    insmunicipal: {
+                        required: true
+                    },
+                    alvasanitario: {
+                        required: true
+                    },
+                    telefoneemp: {
+                        required: true,
+                        minlength: 13
+                    },
+                    celular: {
+                        required: true,
+                        minlength: 13
+                    }
+                },
+                messages: {
+                    name: {
+                        required: "Por favor, digite seu nome"
+                    },
+                    telefone: {
+                        required: "Por favor, digite seu numero de telefone"
+                    },
+                    email:{
+                        required: "Por favor, digite seu email"
+                    },
+                    cep:{
+                        required: "Por favor, digite seu CEP"
+                    },
+                    cnpj:{
+                        required: "Por favor, digite o CNPJ"
+                    },
+                    cpf:{
+                        required: "Por favor, digite seu CPF"
+                    },
+                    celularemp:{
+                        required: "Por favor, digite seu Telefone"
+                    }
+                }
+            });
+        });
+    </script>
+    <script>
+        var x=document.getElementById("demo");
+        function getLocation()
+        {
+        if (navigator.geolocation)
+            {
+            navigator.geolocation.getCurrentPosition(showPosition);
+            }
+        else{x.innerHTML="O seu navegador não suporta Geolocalização.";}
+        }
+        function showPosition(position)
+        {
+        $('.latitude').val(position.coords.latitude);
+        $('.longitude').val(position.coords.longitude);
+        }
+    </script>
+
+    
+</script>
+
+</body>
+
+</html>
+
